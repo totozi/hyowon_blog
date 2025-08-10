@@ -148,7 +148,15 @@ public class NotionExporter {
                             .notion-table tbody tr:hover td{
                             background:rgba(55,53,47,.04);
                             }
-                        </style></head><body>
+                        </style>
+                         <!-- Prism: 코드 하이라이트 -->
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/themes/prism.css">
+                        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.css">
+                        <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+                        <script>Prism.plugins.autoloader.languages_path='https://cdn.jsdelivr.net/npm/prismjs/components/';</script>
+                        </head><body>
                         """);
 
         // 상단 네비(루트 아니면 index로 가는 링크)
@@ -238,10 +246,13 @@ public class NotionExporter {
                 case "callout" -> out.append("<div class='callout'>")
                         .append(renderText(b.path("callout").path("rich_text"))).append("</div>");
                 case "code" -> {
-                    String lang = b.path("code").path("language").asText("");
+                    String langRaw = b.path("code").path("language").asText("");
                     String code = concatPlain(b.path("code").path("rich_text"));
-                    out.append("<pre><code class='language-").append(esc(lang)).append("'>")
-                            .append(esc(code)).append("</code></pre>");
+                    out.append("<pre class='line-numbers'><code class='language-")
+                    .append(esc(prismLang(langRaw)))   // ← 아래 매핑 함수 쓰면 더 정확
+                    .append("'>")
+                    .append(esc(code))
+                    .append("</code></pre>");
                 }
                 case "bulleted_list_item" -> {
                     if (!inUL) {
@@ -600,4 +611,20 @@ public class NotionExporter {
         out.append("</div>");
     }
 
+    private static String prismLang(String notion) {
+        String s = (notion == null ? "" : notion).toLowerCase(Locale.ROOT).trim();
+        return switch (s) {
+            case "plain text", "plaintext", "text" -> "none";
+            case "shell", "bash", "sh", "zsh" -> "bash";
+            case "c++" -> "cpp";
+            case "c#" -> "csharp";
+            case "js" -> "javascript";
+            case "ts" -> "typescript";
+            case "objective-c" -> "objectivec";
+            case "html" -> "markup";
+            case "yml" -> "yaml";
+            default -> s; // 나머지는 그대로
+        };
+    }
+    
 }

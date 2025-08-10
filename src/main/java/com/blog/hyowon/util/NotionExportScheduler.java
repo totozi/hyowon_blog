@@ -15,7 +15,8 @@ public class NotionExportScheduler {
     }
 
     // 테스트: 3분마다
-    @Scheduled(cron = "0 0 3 * * *")
+    @Scheduled(cron = "0 */1 * * * *")
+    // @Scheduled(cron = "0 0 3 * * *")
     public void exportNotion() throws Exception {
         String token  = notionConfig.getApiKey();
         String pageId = notionConfig.getPageId();
