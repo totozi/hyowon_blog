@@ -623,6 +623,7 @@ public class NotionExporter {
             case "objective-c" -> "objectivec";
             case "html" -> "markup";
             case "yml" -> "yaml";
+            case "sql", "mysql", "postgresql", "postgres", "sqlite" -> "sql"; // ← 추가
             default -> s; // 나머지는 그대로
         };
     }
