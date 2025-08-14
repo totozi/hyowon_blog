@@ -39,7 +39,12 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
+// 부트 실행용 JAR 파일명 고정
+bootJar {
+    archiveFileName.set("hyowon_blog.jar")
+}
+
+// 헷갈리는 plain JAR 안 만들게 끔
 jar {
-    archiveBaseName.set("hyowon_blog")
-    archiveVersion.set("") // 버전 빼기
+    enabled = false
 }
