@@ -3,6 +3,8 @@ package com.blog.hyowon.util;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import jakarta.annotation.PostConstruct;
+
 import java.nio.file.*;
 
 @Component
@@ -13,6 +15,12 @@ public class NotionExportScheduler {
     public NotionExportScheduler(NotionConfig notionConfig) {
         this.notionConfig = notionConfig;
     }
+
+    @PostConstruct
+    public void runOnStartup() throws Exception {
+        exportNotion();
+    }
+
 
     // 테스트: 3분마다
     @Scheduled(cron = "0 */1 * * * *")
