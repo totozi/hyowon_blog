@@ -38,3 +38,8 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+jar {
+    archiveBaseName.set("hyowon_blog")
+    archiveVersion.set("") // 버전 빼기
+}
